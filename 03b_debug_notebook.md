@@ -135,8 +135,6 @@ print(f"Glucose calculated for {len(patients)} patients")
 print(f"Sample values:")
 print(patients[["patient_id", "glucose_mg_dl"]].head())
 
-# Ensure at least one diabetes-range value appears for testing/coverage
-patients.loc[patients.index[0], "glucose_mg_dl"] = 130.0
 ```
 
     Estimating fasting glucose from BMI and age...
@@ -183,17 +181,17 @@ print(patients[["patient_id", "glucose_mg_dl", "diabetes_risk"]].head(10))
     
     Categorizing diabetes risk based on fasting glucose...
     Risk categories assigned:
-      patient_id  glucose_mg_dl              diabetes_risk
-    0       P001          130.0  Very high risk (diabetes)
-    1       P002          105.0    High risk (prediabetes)
-    2       P003          103.0    High risk (prediabetes)
-    3       P004           99.0          Low risk (normal)
-    4       P005           93.0          Low risk (normal)
-    5       P006          105.0    High risk (prediabetes)
-    6       P007          120.0    High risk (prediabetes)
-    7       P008          118.0    High risk (prediabetes)
-    8       P009          116.0    High risk (prediabetes)
-    9       P010           92.0          Low risk (normal)
+      patient_id  glucose_mg_dl            diabetes_risk
+    0       P001          124.0  High risk (prediabetes)
+    1       P002          105.0  High risk (prediabetes)
+    2       P003          103.0  High risk (prediabetes)
+    3       P004           99.0        Low risk (normal)
+    4       P005           93.0        Low risk (normal)
+    5       P006          105.0  High risk (prediabetes)
+    6       P007          120.0  High risk (prediabetes)
+    7       P008          118.0  High risk (prediabetes)
+    8       P009          116.0  High risk (prediabetes)
+    9       P010           92.0        Low risk (normal)
 
 
 ---
@@ -206,7 +204,7 @@ print("\nIdentifying patients needing follow-up...")
 
 # Find patients with elevated glucose
 high_risk = patients[
-    patients["diabetes_risk"].str.contains("High risk")
+    patients["diabetes_risk"].str.contains("High risk|Very high risk", regex=True)
 ].copy()
 
 print(f"Found {len(high_risk)} patients with elevated glucose")
@@ -216,8 +214,8 @@ if len(high_risk) > 0:
 
     
     Identifying patients needing follow-up...
-    Found 32 patients with elevated glucose
-    Glucose range: 100.0 to 125.0
+    Found 39 patients with elevated glucose
+    Glucose range: 100.0 to 142.0
 
 
 ---
@@ -259,12 +257,12 @@ if priority_patients:
 
     
     Calculating intervention priority scores...
-    Priority scores calculated for 32 patients
+    Priority scores calculated for 39 patients
     
     Top 3 priority patients:
-      P024: score 61.0 (glucose=125.0, age=72)
-      P028: score 55.0 (glucose=117.0, age=76)
-      P020: score 51.0 (glucose=113.0, age=76)
+      P031: score 80.5 (glucose=138.0, age=85)
+      P046: score 69.0 (glucose=133.0, age=72)
+      P029: score 67.5 (glucose=142.0, age=51)
 
 
 ---
@@ -286,8 +284,8 @@ print(f"Patients prioritized for intervention: {len(priority_patients)}")
     Lab Results Analysis Complete
     ==================================================
     Total patients analyzed: 50
-    High-risk patients: 32
-    Patients prioritized for intervention: 32
+    High-risk patients: 39
+    Patients prioritized for intervention: 39
 
 
 ---
