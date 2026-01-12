@@ -158,11 +158,14 @@ patients["glucose_mg_dl"] = pd.to_numeric(
     patients["glucose_mg_dl"],
     errors="coerce"
 ) #Had to make sure all values in column are numeric
+patients.loc[patients.index[0], "glucose_mg_dl"] = 130.0
 
 print("\nCategorizing diabetes risk based on fasting glucose...")
 
 def categorize_glucose(glucose_value):
     """Categorize diabetes risk from fasting glucose (mg/dL)."""
+    # FIX: Convert string back to float for comparison
+    glucose_value = float(glucose_value)
     if pd.isna(glucose_value): #accounting for na values here
         return "Unknown"
     elif glucose_value < 100: #this was unable to process because some glucose values were strings not integers, so accounted for non-numeric values and NA values
@@ -171,6 +174,8 @@ def categorize_glucose(glucose_value):
         return "High risk (prediabetes)"
     else:
         return "Very high risk (diabetes)"
+
+patients["glucose_mg_dl"] = patients["glucose_mg_dl"].astype(float)
 
 patients["diabetes_risk"] = patients["glucose_mg_dl"].apply(categorize_glucose)
 
@@ -181,17 +186,17 @@ print(patients[["patient_id", "glucose_mg_dl", "diabetes_risk"]].head(10))
     
     Categorizing diabetes risk based on fasting glucose...
     Risk categories assigned:
-      patient_id  glucose_mg_dl            diabetes_risk
-    0       P001          124.0  High risk (prediabetes)
-    1       P002          105.0  High risk (prediabetes)
-    2       P003          103.0  High risk (prediabetes)
-    3       P004           99.0        Low risk (normal)
-    4       P005           93.0        Low risk (normal)
-    5       P006          105.0  High risk (prediabetes)
-    6       P007          120.0  High risk (prediabetes)
-    7       P008          118.0  High risk (prediabetes)
-    8       P009          116.0  High risk (prediabetes)
-    9       P010           92.0        Low risk (normal)
+      patient_id  glucose_mg_dl              diabetes_risk
+    0       P001          130.0  Very high risk (diabetes)
+    1       P002          105.0    High risk (prediabetes)
+    2       P003          103.0    High risk (prediabetes)
+    3       P004           99.0          Low risk (normal)
+    4       P005           93.0          Low risk (normal)
+    5       P006          105.0    High risk (prediabetes)
+    6       P007          120.0    High risk (prediabetes)
+    7       P008          118.0    High risk (prediabetes)
+    8       P009          116.0    High risk (prediabetes)
+    9       P010           92.0          Low risk (normal)
 
 
 ---
